@@ -1,10 +1,10 @@
 import './App.css';
-import photo from './Lee Dong-wook.jpeg'
+import Image from './imageBase64';
 
 function App() {
   return (
     <div id="actor" align="center">
-        <img src={photo} alt="Lee Dong-wook" />
+        <img src={Image()} alt="Lee Dong-wook" />
         <p>
           Lee Dong-wook, born November 6, 1981.
         </p>
