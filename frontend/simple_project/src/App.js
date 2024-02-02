@@ -1,18 +1,35 @@
 import './App.css';
-import Image from './imageBase64';
+import axios from 'axios';
+import React, { useEffect, useState } from "react";
 
 function App() {
+  const url_server = "http://localhost:5000/get_actors_list";
+  const [actors, setActors] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(url_server)
+      .then((response) => {
+        setActors(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
   return (
-    <div id="actor" align="center">
-        <img src={Image()} alt="Lee Dong-wook" />
-        <p>
-          Lee Dong-wook, born November 6, 1981.
-        </p>
-        <a
-          href="https://www.kinopoisk.ru/name/1282438/?utm_referrer=yandex.ru"
-        >
-          More information
-        </a>
+    <div align="center">
+      {actors.map(actor => (
+        <div>
+          <img src={actor.image} alt={actor.name}/>
+          <p>{actor.name}, {actor.info}</p>
+          <a
+            href={actor.link}
+          >
+            More information
+          </a>
+        </div>
+      ))}
     </div>
   );
 }
