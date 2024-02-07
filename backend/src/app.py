@@ -1,7 +1,9 @@
 from flask import Flask
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
 import os
 import psycopg2
+from actor import Actor
+from utils import get_name
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -19,8 +21,9 @@ def _get_actors_from_db():
         all_actors = cursor.fetchall()
         cursor.close()  # закрываем курсор
         conn.close()  # закрываем соединение
-        for actor in all_actors:
-            actors_list.append({'name': actor[1], 'info': actor[2], 'image': actor[3], 'link': actor[4]})
+        for actor_list in all_actors:
+            actor = Actor(*actor_list[1:])
+            actors_list.append(actor.create_dict())
         return actors_list
     except Exception as err:
         # в случае сбоя подключения будет выведено сообщение в STDOUT
@@ -35,17 +38,17 @@ def _get_actors_from_files():
     for filename in filenames:
         with open(parth + filename) as f:
             lines = f.readlines()
-        actors_list.append({'name': filename[:-4], 'image': lines[0][:-1], 'info': lines[1][:-1], 'link': lines[2]})
+        actor = Actor(get_name(filename), *[x.strip() for x in lines])
+        actors_list.append(actor.create_dict())
     return actors_list
 
 
 @app.route('/get_actors_list')
 def get_actors_list():
-    # actors_list = _get_actors_from_files()
-    actors_list = _get_actors_from_db()
-    return actors_list
+    actors_list_1 = _get_actors_from_files()
+    actors_list_2 = _get_actors_from_db()
+    return actors_list_1 + actors_list_2
 
 
 if __name__ == '__main__':
     app.run()
-

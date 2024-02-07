@@ -21,13 +21,15 @@ function App() {
     <div align="center">
       {actors.map(actor => (
         <div>
-          <img src={actor.image} alt={actor.name}/>
-          <p>{actor.name}, {actor.info}</p>
-          <a
-            href={actor.link}
-          >
-            More information
-          </a>
+          <h1 style={{backgroundColor: actor.color}}>
+            <img src={actor.image} alt={actor.name}/>
+            <p>{actor.name}, {actor.info}</p>
+            <a
+              href={actor.link}
+            >
+              More information
+            </a>
+          </h1>
         </div>
       ))}
     </div>
