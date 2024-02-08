@@ -1,0 +1,32 @@
+name: Backend test
+on:
+   # События, которые запускают jobs
+    push:
+      branches: [ "main" ]
+    pull_request:
+      branches: [ "main" ]
+
+jobs:  # Запускаются параллельно
+  backend-test:  # Название job'а
+    runs-on: ubuntu-latest  # Операционная система на виртуальной машине для запуска тестов
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+        name: Setup Python v3.10
+
+      - name: Setting up the environment
+        run: |
+          echo "Setup PyTest"
+          pip install pytest
+          echo "PyTest has been successfully install"
+
+      - name: Running tests
+        run: |
+          cd backend
+          echo "Starting backend tests..."
+          pytest
+
+      - run: echo "🍏 This job's status is ${{ job.status }}."
